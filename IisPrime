@@ -1,0 +1,80 @@
+// IISPRIME
+
+iisprime1   MAR=SP; rd                      // so we can always access n
+// set H=2
+iisprime2   H=1
+iisprime3   H=H+1
+
+// line issues
+
+iisprime4   H=MDR-H                         // check first ilft
+iisprime5   N=H; if (N) goto iisprime49; else goto iisprime6
+iisprime6   rd
+iisprime7   H=1
+iisprime8   H=MDR-H
+iisprime9   N=H; if (N) goto iisprime48; else goto iisprime10
+// mod1
+iisprime10   rd
+
+// set H=4
+iisprime11  H=1
+iisprime12  H= H+1
+iisprime13  H= H+1
+iisprime14  H= H+1
+
+
+// line issues
+
+iisprime15  N=MDR; if (N) goto iisprime18; else goto iisprime16
+iisprime16  Z=MDR; if (Z) goto iisprime49; else goto iisprime18
+iisprime17  MDR=MDR-H; goto iisprime10
+
+// mod2
+iisprime18  rd
+
+// h was 4, sub 1
+iisprime19  H= -1
+iisprime20  N=MDR; if (N) goto iisprime22; else goto iisprime21
+iisprime21  Z=MDR; if (Z) goto iisprime49; else goto iisprime22
+iisprime22  MDR=MDR-H; goto iisprime15
+// while loop
+
+//opc needs to be 5 increase h=3. h+h-1 = 5
+iisprime23  OPC=H+1 //4
+iisprime24  OPC=H+1 //5
+
+
+// while loop start
+//H=5 now
+iisprime25  MDR=H=OPC                             // read second stack value
+iisprime26  TOS=0                           // set subtotal
+iisprime28  Z=MDR; if (Z) goto iisprime31; else goto iisprime29
+iisprime29  TOS=TOS+H                       // update subtotal
+iisprime30  MDR=MDR-1; goto iisprime21         // loop back to start
+// compare mult to n
+iisprime31  rd
+iisprime32
+iisprime33  H=MDR+1
+iisprime34  H=TOS-H
+iisprime35  N=H; if (N) goto iisprime36; else goto iisprime48
+
+
+// inner while mod functions
+iisprime36  rd
+
+//opc is 5
+iisprime37  H=OPC
+iisprime38  N=MDR; if (N) goto iisprime41; else goto iisprime39
+iisprime39  Z=MDR; if (Z) goto iisprime49; else goto iisprime40
+iisprime40  MDR=MDR-H; goto iisprime38
+iisprime41  rd; H=OPC+1
+iisprime42  H=H+1
+iisprime43  N=MDR; if (N) goto iisprime46; else goto iisprime44
+iisprime44  Z=MDR; if (Z) goto iisprime49; else goto iisprime45
+iisprime45  MDR=MDR-H; goto iisprime15
+
+//opc is 5 H=OPC +1 6
+iisprime46  H=OPC+1
+iisprime47  OPC=OPC+H; goto iisprime25
+iisprime48  MDR=TOS=1;wr;goto Main1
+iisprime49  MDR=TOS=0;wr;goto Main2

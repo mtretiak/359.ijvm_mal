@@ -1,0 +1,256 @@
+.constant
+  OBJREF 0x40
+.end-constant
+
+
+.main
+
+  LDC_W  OBJREF
+  BIPUSH 0x6
+  BIPUSH 0x2
+
+  IISPRIME
+
+
+
+
+
+HALT
+.end-main
+
+
+
+.method is_prime(n)
+
+.var
+i
+.end-var
+
+//if n is one, it is not prime, return false
+  ILOAD n
+  BIPUSH 1
+  IF_ICMPEQ done
+
+
+//if n is 2, it is prime, return n
+  ILOAD n
+  BIPUSH 2
+  IF_ICMPEQ done1
+
+  ILOAD n
+  BIPUSH 3
+  IF_ICMPEQ done1
+
+  LDC_W OBJREF
+  ILOAD n
+  BIPUSH 2
+  INVOKEVIRTUAL mod
+  IFEQ done
+
+
+  LDC_W OBJREF
+  ILOAD n
+  BIPUSH 3
+  INVOKEVIRTUAL mod
+  IFEQ done
+
+  ILOAD n
+  BIPUSH 5
+  ISUB
+  IFEQ done1
+
+  ILOAD n
+  BIPUSH 7
+  ISUB
+  IFEQ done1
+
+
+
+  BIPUSH 5
+  ISTORE i
+
+  while:
+    LDC_W OBJREF
+    ILOAD i
+    ILOAD i
+    INVOKEVIRTUAL MUL
+    ILOAD n
+    ISUB
+    IFLT doneWhile
+    LDC_W OBJREF
+    ILOAD n
+    ILOAD i
+    INVOKEVIRTUAL mod
+    IFEQ done
+    LDC_W OBJREF
+    ILOAD n
+    ILOAD i
+    BIPUSH 2
+    IADD
+    INVOKEVIRTUAL mod
+    IFEQ done
+    ILOAD i
+    BIPUSH 6
+    IADD
+    GOTO while
+    doneWhile:
+
+  done1:
+  ILOAD n
+  IRETURN
+  done:
+    BIPUSH 0xF
+    IRETURN
+
+
+.end-method
+
+
+.method mod(a,b)
+.var
+.end-var
+
+
+while:
+  ILOAD a
+  ILOAD b
+  ISUB
+  IFLT done
+  ILOAD a
+  ILOAD b
+  ISUB
+  ISTORE a
+  GOTO while
+  done:
+    ILOAD a
+  IRETURN
+
+
+
+
+.end-method
+
+
+
+.method POW(a,b)
+.var
+  anw
+  inc
+  i
+  j
+.end-var
+
+ILOAD a
+ISTORE anw
+ILOAD a
+ISTORE inc
+BIPUSH 1
+BIPUSH 1
+ISTORE i
+ISTORE j
+
+loop1:
+  ILOAD i
+  ILOAD b
+  ISUB
+  IFEQ done1
+  loop2:
+    ILOAD j
+    ILOAD a
+    ISUB
+    IFEQ done2
+    ILOAD anw
+    ILOAD inc
+    IADD
+    ISTORE anw
+    IINC j 1
+    GOTO loop2
+  done2:
+  ILOAD anw
+  ISTORE inc
+  IINC i 1
+  BIPUSH 1
+  ISTORE j
+  GOTO loop1
+done1:
+
+ILOAD anw
+
+IRETURN
+
+.end-method
+
+
+.method POWER(a,c)
+.var
+  p
+  b
+
+.end-var
+//a is base, b is power
+
+
+//IF 0 RETURN 1
+  ILOAD a //inner
+//  ISTORE b //stores inner
+  BIPUSH 0
+  ISTORE p
+  ILOAD a
+  IFEQ return
+  while:
+
+    ILOAD c
+    IFEQ return
+    IINC b 2
+
+    ILOAD p
+    ILOAD a
+    while1:
+      ILOAD b
+      IFEQ endWhile1
+      ILOAD p
+      ILOAD a
+      IADD
+      ISTORE p
+      IINC b -1
+
+      GOTO while1
+    endWhile1:
+      IINC c -1
+      GOTO while
+
+    return:
+      ILOAD p
+    IRETURN
+.end-method
+
+
+
+
+
+.method MUL(a,b)
+
+.var
+  p
+.end-var
+
+  BIPUSH 0
+  ISTORE p
+  ILOAD a
+  IFEQ return
+  while1:
+    ILOAD b
+    IFEQ return
+    ILOAD p
+    ILOAD a
+    IADD
+    ISTORE p
+    IINC b -1
+
+    GOTO while1
+
+  return:
+    ILOAD p
+  IRETURN
+
+.end-method
